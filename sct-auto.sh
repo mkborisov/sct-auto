@@ -34,9 +34,8 @@ if ! [ -s "$LOC_FILE" ]; then
     # file not present or is empty so get the location
     get_location
 fi
-
-if [ "$DATE_TODAY" != $(date -r $LOC_FILE +%Y-%m-%d) ]; then
-    echo "date today not equal to date modified so refresh the data"
+if [ "$DATE_TODAY" != "$(date -r "$LOC_FILE" +%Y-%m-%d)" ]; then
+    # date today not equal to date modified so refresh the data
     get_location
 fi
 
@@ -45,12 +44,13 @@ SUNSET_LOCAL=$(cat $SUN_TIMES_FILE | cut -d "," -f2)
 DAWN_LOCAL=$(cat $SUN_TIMES_FILE | cut -d "," -f3)
 DUSK_LOCAL=$(cat $SUN_TIMES_FILE | cut -d "," -f4)
 
+export DISPLAY=:0
 # Set screen color temp based on time
-if [ "$UNIX_TIME_NOW" -ge $DAWN_LOCAL ] && [ "$UNIX_TIME_NOW" -lt $SUNRISE_LOCAL ]; then
+if [ "$UNIX_TIME_NOW" -ge "$DAWN_LOCAL" ] && [ "$UNIX_TIME_NOW" -lt "$SUNRISE_LOCAL" ]; then
     sct 5000  # dawn
-elif [ "$UNIX_TIME_NOW" -ge $SUNRISE_LOCAL ] && [ "$UNIX_TIME_NOW" -lt $SUNSET_LOCAL ]; then
+elif [ "$UNIX_TIME_NOW" -ge "$SUNRISE_LOCAL" ] && [ "$UNIX_TIME_NOW" -lt "$SUNSET_LOCAL" ]; then
     sct 6500  # daylight
-elif [ "$UNIX_TIME_NOW" -ge $SUNSET_LOCAL ] && [ "$UNIX_TIME_NOW" -lt $DUSK_LOCAL ]; then
+elif [ "$UNIX_TIME_NOW" -ge "$SUNSET_LOCAL" ] && [ "$UNIX_TIME_NOW" -lt "$DUSK_LOCAL" ]; then
     sct 4500  # dusk
 else
     sct 3500  # night
